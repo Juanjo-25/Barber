@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barber Shop - Reserva tu cita</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>✂ BARBER</h1>
+            </div>
+            <nav class="nav">
+                <a href="#home" class="nav-link active">Inicio</a>
+                <a href="#barbershops" class="nav-link">Barberías</a>
+                <a href="#about" class="nav-link">Nosotros</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h2 class="hero-title fade-in">Estilo y Elegancia</h2>
+            <p class="hero-subtitle fade-in-delay">Encuentra tu barbería perfecta y reserva tu próxima cita</p>
+            <button class="btn-primary fade-in-delay-2" onclick="scrollToSection('barbershops')">Explorar Barberías</button>
+        </div>
+        <div class="hero-overlay"></div>
+    </section>
+
+    <!-- Barbershops Section -->
+    <section class="barbershops-section" id="barbershops">
+        <div class="container">
+            <h2 class="section-title">Nuestras Barberías</h2>
+            <p class="section-subtitle">Selecciona tu barbería favorita</p>
+            
+            <div class="barbershops-grid" id="barbershopsGrid">
+                <!-- Barbershops will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Barbers Section (Hidden by default) -->
+    <section class="barbers-section hidden" id="barbersSection">
+        <div class="container">
+            <button class="btn-back" onclick="goBackToBarbershops()">← Volver a Barberías</button>
+            <h2 class="section-title" id="barbershopTitle"></h2>
+            <div class="barbershop-rating" id="barbershopRating"></div>
+            
+            <h3 class="barbers-subtitle">Selecciona tu Barbero</h3>
+            <div class="barbers-grid" id="barbersGrid">
+                <!-- Barbers will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Modal -->
+    <div class="modal hidden" id="bookingModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeBookingModal()">&times;</span>
+            <h2 class="modal-title">Reservar Cita</h2>
+            
+            <div class="booking-summary">
+                <div class="summary-item">
+                    <span class="summary-label">Barbería:</span>
+                    <span class="summary-value" id="modalBarbershop"></span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Barbero:</span>
+                    <span class="summary-value" id="modalBarber"></span>
+                </div>
+            </div>
+            
+            <form class="booking-form" id="bookingForm">
+                <div class="form-group">
+                    <label for="clientName">Nombre Completo</label>
+                    <input type="text" id="clientName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="clientPhone">Teléfono</label>
+                    <input type="tel" id="clientPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="appointmentDate">Fecha</label>
+                    <input type="date" id="appointmentDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="appointmentTime">Hora</label>
+                    <select id="appointmentTime" required>
+                        <option value="">Selecciona una hora</option>
+                        <option value="09:00">09:00</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="13:00">13:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                        <option value="18:00">18:00</option>
+                        <option value="19:00">19:00</option>
+                        <option value="20:00">20:00</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="serviceType">Servicio</label>
+                    <select id="serviceType" required>
+                        <option value="">Selecciona un servicio</option>
+                        <option value="Corte Clásico">Corte Clásico</option>
+                        <option value="Corte Moderno">Corte Moderno</option>
+                        <option value="Afeitado">Afeitado</option>
+                        <option value="Corte + Barba">Corte + Barba</option>
+                        <option value="Tinte">Tinte</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn-primary btn-full">Confirmar Reserva</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Rating Modal -->
+    <div class="modal hidden" id="ratingModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeRatingModal()">&times;</span>
+            <h2 class="modal-title">Calificar</h2>
+            
+            <div class="rating-section">
+                <h3 id="ratingTargetName"></h3>
+                <div class="stars-container" id="starsContainer">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+                <p class="rating-text" id="ratingText">Selecciona una calificación</p>
+            </div>
+            
+            <button class="btn-primary btn-full" onclick="submitRating()">Enviar Calificación</button>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message hidden" id="successMessage">
+        <div class="success-content">
+            <span class="success-icon">✓</span>
+            <p class="success-text"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" id="about">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>BARBER</h3>
+                    <p>Tu estilo, nuestra pasión</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p>Email: info@barber.com</p>
+                    <p>Tel: +34 900 000 000</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Horario</h4>
+                    <p>Lunes - Sábado: 9:00 - 21:00</p>
+                    <p>Domingo: Cerrado</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Barber Shop. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
